@@ -48,8 +48,17 @@ func main() {
 	fmt.Println("Database connection established successfully")
 
 	// createdTable(db)
+	lastID, err := createUser(db, "Alice", "alice@gmail.com", "password")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	lastID, err := createUser(db, "John", "john@gmail.com", "password")
+	lastID, err = createUser(db, "Rakib", "rakib@gmail.com", "password")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	lastID, err = createUser(db, "Jane", "jane@gmail.com", "password")
 	if err != nil {
 		log.Fatal(err)
 	}
