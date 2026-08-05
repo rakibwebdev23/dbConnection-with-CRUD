@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -38,21 +39,22 @@ func main() {
 		log.Fatal(err)
 	}
 
+	ctx := context.Background()
+
 	// Insert user
-	lastID, err := createUserWithPrepared(
+	_, err = createUserWithPreparedCtx(
+		ctx,
 		db,
 		"Rakib",
-		"rakib4@gmail.com",
+		"rakib3@gmail.com",
 		"password",
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println("User created with ID:", lastID)
 }
 
-func createUserWithPrepared(db *sql.DB, name, email, password string) (int64, error) {
+func createUserWithPreparedCtx(ctx context.Context, db *sql.DB, name, email, password string) (int64, error) {
 	// Prepare SQL statement
 	stmt, err := db.Prepare(`
 		INSERT INTO users (name, email, hashed_password)
@@ -73,7 +75,7 @@ func createUserWithPrepared(db *sql.DB, name, email, password string) (int64, er
 	}
 
 	// Execute statement
-	result, err := stmt.Exec(name, email, hashedPassword)
+	result, err := stmt.ExecContext(ctx, name, email, hashedPassword)
 	if err != nil {
 		return 0, err
 	}
